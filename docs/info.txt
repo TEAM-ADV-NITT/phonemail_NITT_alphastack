@@ -1,0 +1,456 @@
+TEAM ADV — PhoneMail
+Project Explanation & Development Guide
+
+1. PROJECT OVERVIEW
+
+PhoneMail is an email platform where a user's phone number acts as their email identity.
+
+Example:
+9876543210@phonemail.com
+
+The goal is to make email communication easier for users who are more familiar with phone numbers than conventional email addresses.
+
+TEAM ADV will build a web-based PhoneMail application with:
+- A mobile-first interface
+- A desktop web interface
+- Phone-number-based registration and OTP verification
+- Email conversations and threading
+- Traditional email interoperability
+- SMS notifications
+- A backend API
+- PostgreSQL database
+- SMTP integration
+- Dockerized deployment
+
+The hackathon specification explicitly prioritizes the mobile client and requires the complete application to be containerized so that it can run using Docker Compose.
+
+2. WHAT THE HACKATHON REQUIRES
+
+The official specification requires an email application where phone numbers function as email IDs, for example:
+
+9876543210@phonemail.com
+
+Account access should support:
+- Toll-free number and IVR-based account creation
+- SMS-based interaction
+- Web registration using Phone Number + OTP
+- Password fallback if OTP is unavailable
+
+Once an account exists, the user should be able to receive emails and access the service through mobile or web.
+
+For users without the mobile application, the system should provide an SMS notification when an email is received.
+
+The web client should provide a desktop email experience, while the mobile experience should follow a conversation/chat-oriented design.
+
+3. HOW PHONEMAIL WORKS
+
+A PhoneMail user is identified primarily by their phone number.
+
+Example:
+
+User phone number:
+9876543210
+
+PhoneMail address:
+9876543210@phonemail.com
+
+Basic communication flow:
+
+User
+  |
+  v
+9876543210
+  |
+  v
+9876543210@phonemail.com
+  |
+  v
+PhoneMail
+  |
+  +--> Inbox
+  +--> Conversations
+  +--> Sent
+  +--> Drafts
+
+The system should support communication between:
+- PhoneMail users
+- PhoneMail and conventional email users
+- External email services such as Gmail
+
+4. ACCOUNT CREATION AND AUTHENTICATION
+
+WEB REGISTRATION
+
+The primary web registration flow is:
+
+1. User enters phone number.
+2. System sends OTP.
+3. User enters OTP.
+4. Phone number is verified.
+5. PhoneMail account is created.
+
+If OTP is unavailable, the specification permits a password fallback.
+
+IVR
+
+IVR means Interactive Voice Response.
+
+The proposed IVR flow is:
+
+1. User calls the toll-free number.
+2. Automated system answers.
+3. User selects the required option, such as pressing 1.
+4. The system starts the account-creation process.
+
+SMS
+
+SMS can be used for notifications and, where applicable, account interaction.
+
+For users without the mobile app, an email notification can be delivered through SMS.
+
+Example:
+
+"You have received an email from <Sender>.
+Subject: <Subject>."
+
+5. MOBILE INTERFACE
+
+The hackathon places priority on the mobile experience.
+
+The mobile interface should follow the requested WhatsApp-inspired design language while remaining an email application.
+
+Major screens/features include:
+
+ONBOARDING
+- Language selection
+- Terms and conditions
+- Phone verification
+- OTP verification
+- Required permissions
+
+HOME / INBOX
+- Unified inbox and sent experience
+- Conversations/threads
+- Search
+- All
+- Unread
+- Attachments
+- Favorites
+
+MENU
+- Home
+- Drafts
+- Spam
+- Trash
+
+COMPOSE
+Users should be able to compose messages in a conversational style or traditional email style.
+
+CONVERSATIONS
+- Threaded emails
+- Replies
+- Conversation history
+- Group conversations
+
+TRADITIONAL EMAIL VIEW
+Long or complex emails should also have a conventional email presentation.
+
+6. DESKTOP WEB INTERFACE
+
+The desktop interface should use a traditional email-client design rather than the mobile chat-style layout.
+
+The web application should support:
+- Login/signup using phone number and OTP
+- Inbox
+- Sent
+- Drafts
+- Spam
+- Trash
+- Search
+- Email reading
+- Compose
+- Replies
+- Profile/settings
+
+7. SYSTEM ARCHITECTURE
+
+TEAM ADV will use the following high-level architecture:
+
+                 +----------------------+
+                 |       Next.js        |
+                 | Mobile + Desktop UI  |
+                 +----------+-----------+
+                            |
+                         REST API
+                            |
+                 +----------v-----------+
+                 |   Node.js + Express  |
+                 |       Backend        |
+                 +----+---------+-------+
+                      |         |
+                      v         v
+                PostgreSQL    External
+                              Services
+                              /   |                              SMTP Twilio IVR
+
+Responsibilities:
+
+FRONTEND
+- User interface
+- Authentication screens
+- Inbox and conversation UI
+- Compose and email reading
+- Responsive mobile/desktop experience
+
+BACKEND
+- Authentication
+- User management
+- Email processing
+- Conversations
+- API endpoints
+- Integration with SMTP/SMS/IVR
+- Security and validation
+
+DATABASE
+- Users
+- Phone numbers
+- Emails
+- Conversations
+- Attachments/metadata
+- Authentication-related data
+- Application state
+
+EXTERNAL SERVICES
+- SMTP for email transport
+- Twilio or another suitable provider for SMS/IVR
+
+8. TECHNOLOGY STACK
+
+Frontend:
+- Next.js
+- Tailwind CSS
+
+Backend:
+- Node.js
+- Express.js
+
+Database:
+- PostgreSQL
+
+Communication:
+- SMTP
+- Twilio / suitable SMS provider
+- IVR
+
+Development:
+- Git
+- GitHub
+- REST APIs
+
+Deployment:
+- Docker
+- Docker Compose
+
+9. MONOREPO STRUCTURE
+
+The project is maintained as a monorepo so the entire application is managed from one GitHub repository.
+
+phonemail/
+|
++-- frontend/          # Next.js + Tailwind
++-- backend/           # Node.js + Express
++-- database/          # PostgreSQL-related files
++-- infrastructure/    # Docker/deployment configuration
++-- docs/              # Project documentation
++-- README.md
++-- docker-compose.yml
+
+The docker-compose.yml file will be finalized after the individual services and their dependencies are defined.
+
+10. TEAM DEVELOPMENT WORKFLOW
+
+The team should avoid everyone coding random features at the same time.
+
+Recommended order:
+
+Requirements
+    |
+    v
+Architecture
+    |
+    v
+Database Design
+    |
+    v
+Backend Foundation
+    |
+    v
+Frontend Foundation
+    |
+    v
+Authentication
+    |
+    v
+Email System
+    |
+    v
+Conversations
+    |
+    v
+SMS / IVR
+    |
+    v
+Testing
+    |
+    v
+Dockerization
+    |
+    v
+Deployment
+
+11. GIT / GITHUB WORKFLOW
+
+The project is hosted under the TEAM-ADV GitHub organization.
+
+Recommended workflow:
+
+1. Pull the latest main branch.
+2. Create a feature branch.
+3. Work only on the assigned feature.
+4. Commit changes with a clear message.
+5. Push the branch.
+6. Open a Pull Request.
+7. Review and merge into main.
+
+Example branch names:
+
+feature/auth
+feature/inbox
+feature/email-service
+feature/sms
+feature/ivr
+feature/frontend-mobile
+feature/frontend-desktop
+
+Never commit:
+- .env files
+- API keys
+- passwords
+- private credentials
+- node_modules
+
+12. TEAM RESPONSIBILITIES
+
+The final assignment can be decided by TEAM ADV, but the project naturally divides into:
+
+Frontend
+- Next.js
+- Tailwind
+- Mobile UI
+- Desktop UI
+
+Backend
+- Express API
+- Authentication
+- Email logic
+- Conversation logic
+
+Database
+- PostgreSQL schema
+- Relationships
+- Queries
+- Data integrity
+
+Communication Services
+- SMTP
+- SMS
+- Twilio
+- IVR
+
+DevOps
+- Docker
+- Docker Compose
+- Deployment
+
+Testing / Integration
+- API testing
+- Frontend/backend integration
+- End-to-end testing
+- Final demo preparation
+
+13. 7-DAY DEVELOPMENT STRATEGY
+
+DAY 1
+- Finalize architecture
+- Finalize database model
+- Initialize frontend/backend
+- Establish Git workflow
+
+DAY 2
+- Authentication
+- Phone number registration
+- OTP flow
+- Basic UI
+
+DAY 3
+- Inbox
+- Compose
+- Send/receive email
+- SMTP integration
+
+DAY 4
+- Conversations
+- Replies
+- Search
+- Drafts
+- Spam/Trash
+
+DAY 5
+- SMS notifications
+- IVR exploration/integration
+- Mobile responsiveness
+- Desktop polish
+
+DAY 6
+- Testing
+- Security checks
+- Dockerization
+- Integration fixes
+
+DAY 7
+- Deployment
+- Final bug fixing
+- Demo preparation
+- Documentation
+
+This schedule is a working development plan for TEAM ADV and can change depending on implementation progress.
+
+14. FINAL DEMO FLOW
+
+The final demonstration should tell a simple story:
+
+1. User opens PhoneMail.
+2. User registers using their phone number.
+3. OTP verifies the account.
+4. Phone number becomes the user's PhoneMail identity.
+5. User enters the inbox.
+6. User receives an email.
+7. Email appears as a conversation.
+8. User opens and replies.
+9. User composes a new email.
+10. External email communication is demonstrated.
+11. SMS notification is demonstrated where applicable.
+12. Desktop and mobile responsive interfaces are shown.
+13. The complete application is run using Docker Compose.
+
+15. PROJECT PRINCIPLE
+
+TEAM ADV should build the project as one complete product rather than as disconnected features.
+
+Every feature should answer three questions:
+
+- Does it help the user communicate?
+- Does it integrate correctly with the rest of PhoneMail?
+- Can another team member understand and maintain it?
+
+The objective is to finish with a working, documented, containerized PhoneMail system that the entire team understands.
