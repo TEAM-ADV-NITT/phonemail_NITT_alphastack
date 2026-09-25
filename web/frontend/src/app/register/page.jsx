@@ -14,7 +14,7 @@ function Register() {
 
   async function handleUser() {
     const response = await fetch(
-      "http://localhost:4000/api/auth/register",
+     "https://phonemail-nitt-alphastack.onrender.com/api/auth/register",
       {
         method: "POST",
         headers: {

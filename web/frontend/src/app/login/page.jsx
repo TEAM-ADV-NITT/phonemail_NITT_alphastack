@@ -9,7 +9,7 @@ function Login() {
   const [phone, setPhone] = useState("");
   const handleContinue = async () => {
   const response = await fetch(
-    "http://localhost:4000/api/auth/check-phone",
+   "https://phonemail-nitt-alphastack.onrender.com/api/auth/check-phone",
     {
       method: "POST",
       headers: {
