@@ -2,44 +2,41 @@
 
 import Button from "@/components/ui/Button";
 import { useSearchParams } from "next/navigation";
-import { useState } from "react";
-
+import { useState, Suspense } from "react";
 
 function Register() {
-    const searchParams = useSearchParams();
-    const [success, setSuccess] = useState(false);
-    const phone =searchParams.get("phone")
+  const searchParams = useSearchParams();
+  const [success, setSuccess] = useState(false);
+  const phone = searchParams.get("phone");
 
-     const [fullName, setFullName] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [username, setUsername] = useState("");
 
-      const [username, setUsername] = useState("");
-    
-      async function handleUser (){
-
-            const response = await fetch(
-    "http://localhost:4000/api/auth/register",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        phone: phone,
-        full_name: fullName,
-        username: username,
-      }),
-    }
-  );
-
-   const data = await response.json();
-
-  if (response.ok) {
-  setSuccess(true);
-} else {
-  console.log(data.message);
-}
-
+  async function handleUser() {
+    const response = await fetch(
+      "http://localhost:4000/api/auth/register",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          phone: phone,
+          full_name: fullName,
+          username: username,
+        }),
       }
+    );
+
+    const data = await response.json();
+
+    if (response.ok) {
+      setSuccess(true);
+    } else {
+      console.log(data.message);
+    }
+  }
+
   return (
     <main className="flex min-h-screen w-full items-center justify-center bg-zinc-900 px-6">
       <div className="w-full max-w-md">
@@ -68,7 +65,7 @@ function Register() {
             <input
               id="full-name"
               type="text"
-              onChange={(e) => setFullName(e.target.value) }
+              onChange={(e) => setFullName(e.target.value)}
               placeholder="Aditya Kumar"
               className="w-full rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3 text-white outline-none placeholder:text-zinc-600 focus:border-zinc-500"
             />
@@ -88,7 +85,7 @@ function Register() {
               type="text"
               onChange={(e) => setUsername(e.target.value)}
               placeholder="aditya"
-              className="w-full rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3 text-white outline-none placeholder:text-zinc-600 focus:border-zinc-500"
+              className="w-full rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3 text-white outline-none placeholder:text-zinc-600"
             />
           </div>
 
@@ -109,26 +106,32 @@ function Register() {
               <input
                 id="phone"
                 type="tel"
-                value={phone}
+                value={phone || ""}
                 disabled
                 className="w-full bg-transparent px-4 py-3 text-zinc-500 outline-none"
               />
             </div>
           </div>
 
-          <Button  onClick={handleUser} className="w-full">
+          <Button onClick={handleUser} className="w-full">
             Create Account
           </Button>
- 
         </div>
-                 {success && (
-  <p className="mt-6 text-center text-sm text-green-400">
-    Account created successfully!
-  </p>
-)}
+
+        {success && (
+          <p className="mt-6 text-center text-sm text-green-400">
+            Account created successfully!
+          </p>
+        )}
       </div>
     </main>
   );
 }
 
-export default Register;
+export default function RegisterPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-zinc-900" />}>
+      <Register />
+    </Suspense>
+  );
+}
